@@ -20,11 +20,25 @@ class MatchTest {
     }
 
     @Test
-    void shouldIgnoreWhitespaces(){
+    void shouldIgnoreWhitespaces() {
         var match = new Match("team-A\t", " team-B\n", Instant.now());
 
         assertThat(match.homeTeamName()).isEqualTo("team-A");
         assertThat(match.awayTeamName()).isEqualTo("team-B");
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {"\t,team-A", "team-A,    ", "null,team-A", "team-A,null"}, ignoreLeadingAndTrailingWhitespace = false, nullValues = "null")
+    void shouldFailWhenTeamNameIsBlan(String homeTeamName, String awayTeamName) {
+        assertThatThrownBy(() -> new Match(homeTeamName, awayTeamName, Instant.now()))
+                .isInstanceOf(DomainValidationException.class);
+    }
+
+    @Test
+    void shouldFailWhenTeamNameAreNotUnique() {
+        assertThatThrownBy(() -> new Match("team A   ", " team A", Instant.now()))
+                .isInstanceOf(DomainValidationException.class)
+                .hasMessageContaining("Names of the teams has to be unique");
     }
 
     @ParameterizedTest

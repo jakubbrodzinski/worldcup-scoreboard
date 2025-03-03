@@ -16,15 +16,23 @@ record Match(
     }
 
     Match {
+        validateTeamName(homeTeamName);
+        validateTeamName(awayTeamName);
         homeTeamName = homeTeamName.strip();
         awayTeamName = awayTeamName.strip();
         validateTeamsUniqueness(homeTeamName, awayTeamName);
         validateScoresNotNegative(homeTeamScore, awayTeamScore);
     }
 
+    private void validateTeamName(String teamName) {
+        if (teamName == null || teamName.isBlank()) {
+            throw new DomainValidationException("Invalid team's name");
+        }
+    }
+
     private void validateTeamsUniqueness(String homeTeamName, String awayTeamName) {
         if (homeTeamName.equals(awayTeamName)) {
-            throw new DomainValidationException("Names of the teams are not unique");
+            throw new DomainValidationException("Names of the teams has to be unique");
         }
     }
 
