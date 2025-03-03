@@ -19,11 +19,19 @@ class MatchTest {
         assertThat(match.homeTeamScore()).isZero();
     }
 
+    @Test
+    void shouldIgnoreWhitespaces(){
+        var match = new Match("team-A\t", " team-B\n", Instant.now());
+
+        assertThat(match.homeTeamName()).isEqualTo("team-A");
+        assertThat(match.awayTeamName()).isEqualTo("team-B");
+    }
+
     @ParameterizedTest
     @CsvSource({"-1,0", "2,-3", "-3,-1"})
     void shouldThrowExceptionWhenScoreIsNegative(int homeTeamScore, int awayTeamScore) {
         assertThatThrownBy(() -> new Match("team-A", "team-B", homeTeamScore, awayTeamScore, Instant.now()))
                 .isInstanceOf(DomainValidationException.class)
-                .hasMessageContaining("Match score cannot be negative");
+                .hasMessageContaining("Team score cannot be a negative number");
     }
 }
