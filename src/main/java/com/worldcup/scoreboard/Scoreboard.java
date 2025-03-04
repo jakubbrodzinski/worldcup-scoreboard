@@ -77,6 +77,8 @@ public class Scoreboard {
         }
 
         void deleteByTeamNames(String homeTeamName, String awayTeamName) {
+            teamsWithLiveMatch.remove(homeTeamName);
+            teamsWithLiveMatch.remove(awayTeamName);
             liveMatchesByKey.remove(buildKey(homeTeamName, awayTeamName));
         }
 
