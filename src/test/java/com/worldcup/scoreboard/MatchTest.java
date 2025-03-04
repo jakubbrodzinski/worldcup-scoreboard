@@ -29,7 +29,7 @@ class MatchTest {
 
     @ParameterizedTest
     @CsvSource(value = {"\t,team-A", "team-A,    ", "null,team-A", "team-A,null"}, ignoreLeadingAndTrailingWhitespace = false, nullValues = "null")
-    void shouldFailWhenTeamNameIsBlan(String homeTeamName, String awayTeamName) {
+    void shouldFailWhenTeamNameIsBlank(String homeTeamName, String awayTeamName) {
         assertThatThrownBy(() -> new Match(homeTeamName, awayTeamName, Instant.now()))
                 .isInstanceOf(DomainValidationException.class);
     }
