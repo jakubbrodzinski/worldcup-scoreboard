@@ -110,6 +110,15 @@ class ScoreboardTest {
                     .isInstanceOf(DomainValidationException.class)
                     .hasMessageContaining("cannot be null");
         }
+
+        @Test
+        void shouldAllowStartMatchAfterFinishingIt() {
+            scoreboard.startMatch("team A", "team B");
+            scoreboard.finishMatch("team A", "team B");
+
+            assertThatCode(() -> scoreboard.startMatch("team A", "team B"))
+                    .doesNotThrowAnyException();
+        }
     }
 
     @Nested

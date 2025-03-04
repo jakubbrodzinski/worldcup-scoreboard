@@ -30,6 +30,7 @@ public class Scoreboard {
 
     public void finishMatch(String homeTeamName, String awayTeamName) {
         validateNonNull(homeTeamName, awayTeamName);
+        matchRepository.deleteByTeamNames(homeTeamName, awayTeamName);
     }
 
     public List<MatchSummary> getSummary() {
@@ -73,6 +74,10 @@ public class Scoreboard {
 
         Optional<Match> findByTeamNames(String homeTeamName, String awayTeamName) {
             return Optional.ofNullable(liveMatchesByKey.get(buildKey(homeTeamName, awayTeamName)));
+        }
+
+        void deleteByTeamNames(String homeTeamName, String awayTeamName) {
+            liveMatchesByKey.remove(buildKey(homeTeamName, awayTeamName));
         }
 
         private String buildKey(String homeTeamName, String awayTeamName) {
