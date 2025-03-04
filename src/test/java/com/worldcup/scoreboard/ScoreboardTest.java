@@ -121,5 +121,16 @@ class ScoreboardTest {
                     .extracting(MatchSummary::summary)
                     .isEqualTo("home team 0 - 0 away team");
         }
+
+        @Test
+        void shouldReturnMatchWithUpdatedScore() {
+            scoreboard.startMatch("home team", "away team");
+            scoreboard.updateMatch("home team", "away team", new MatchScore(1, 3));
+
+            assertThat(scoreboard.getSummary())
+                    .singleElement()
+                    .extracting(MatchSummary::summary)
+                    .isEqualTo("home team 1 - 3 away team");
+        }
     }
 }
