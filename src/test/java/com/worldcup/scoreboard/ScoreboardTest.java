@@ -56,6 +56,12 @@ class ScoreboardTest {
                     .isInstanceOf(DomainValidationException.class)
                     .hasMessageContaining("cannot be null");
         }
+
+        @Test
+        void shouldThrowExceptionWhenTeamNameIsBlank() {
+            assertThatThrownBy(() -> scoreboard.startMatch("team A", "\t"))
+                    .isInstanceOf(DomainValidationException.class);
+        }
     }
 
     @Nested
