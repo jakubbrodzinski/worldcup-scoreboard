@@ -59,7 +59,13 @@ class ScoreboardTest {
 
     @Nested
     class UpdateMatch {
+        @Test
+        void shouldUpdateMatch() {
+            scoreboard.startMatch("team A", "team B");
 
+            assertThatCode(() -> scoreboard.updateMatch("team A", "team B", new MatchScore(5, 3)))
+                    .doesNotThrowAnyException();
+        }
     }
 
     @Nested

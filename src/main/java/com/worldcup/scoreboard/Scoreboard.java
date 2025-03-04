@@ -15,6 +15,9 @@ public class Scoreboard {
         matchRepository.save(new Match(homeTeamName, awayTeamName, Instant.now()));
     }
 
+    public void updateMatch(String homeTeamName, String awayTeamName, MatchScore matchScore) {
+    }
+
     private void validateForOngoingMatch(String teamName) {
         if (matchRepository.existsByTeamName(teamName)) {
             throw new TeamPartOfLiveMatchException(teamName);
