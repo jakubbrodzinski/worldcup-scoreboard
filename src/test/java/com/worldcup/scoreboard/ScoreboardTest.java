@@ -10,8 +10,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 
 class ScoreboardTest {
     private Scoreboard scoreboard;
@@ -107,6 +106,9 @@ class ScoreboardTest {
 
     @Nested
     class GetSummary {
-
+        @Test
+        void shouldHandleEmptyScoreboard() {
+            assertThat(scoreboard.getSummary()).isEmpty();
+        }
     }
 }

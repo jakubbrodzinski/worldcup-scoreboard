@@ -5,10 +5,7 @@ import com.worldcup.scoreboard.exceptions.MatchNotFoundException;
 import com.worldcup.scoreboard.exceptions.TeamPartOfLiveMatchException;
 
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public class Scoreboard {
     private final InMemoryMatchRepository matchRepository = new Scoreboard.InMemoryMatchRepository();
@@ -30,6 +27,10 @@ public class Scoreboard {
 
     public void finishMatch(String homeTeamName, String awayTeamName) {
         validateNonNull(homeTeamName, awayTeamName);
+    }
+
+    public List<MatchSummary> getSummary(){
+        return Collections.emptyList();
     }
 
     private void validateForLiveMatch(String teamName) {
