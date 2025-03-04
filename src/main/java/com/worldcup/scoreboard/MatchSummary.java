@@ -12,6 +12,6 @@ public record MatchSummary(String summary) {
     }
 
     private static String buildSummary(Match match) {
-        return "%s %d - %d %s".formatted(match.homeTeamName(), match.homeTeamScore(), match.awayTeamScore(), match.awayTeamName());
+        return "%s %d - %s %d".formatted(match.homeTeamName(), match.homeTeamScore(), match.awayTeamName(), match.awayTeamScore());
     }
 }

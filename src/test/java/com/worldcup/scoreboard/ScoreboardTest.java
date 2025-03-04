@@ -129,32 +129,45 @@ class ScoreboardTest {
         }
 
         @Test
-        void shouldReturnSavedMatch() {
+        void shouldReturnSummaryOfSavedMatch() {
             scoreboard.startMatch("home team", "away team");
 
             assertThat(scoreboard.getSummary())
                     .singleElement()
                     .extracting(MatchSummary::summary)
-                    .isEqualTo("home team 0 - 0 away team");
+                    .isEqualTo("home team 0 - away team 0");
         }
 
         @Test
-        void shouldReturnMatchWithUpdatedScore() {
+        void shouldReturnSummaryOfMatchWithUpdatedScore() {
             scoreboard.startMatch("home team", "away team");
             scoreboard.updateMatch("home team", "away team", new MatchScore(1, 3));
 
             assertThat(scoreboard.getSummary())
                     .singleElement()
                     .extracting(MatchSummary::summary)
-                    .isEqualTo("home team 1 - 3 away team");
+                    .isEqualTo("home team 1 - away team 3");
         }
 
         @Test
-        void shouldNotReturnFinishedMatch() {
+        void shouldReturnNoSummaryWhenAllMatchesFinished() {
             scoreboard.startMatch("home team", "away team");
+            scoreboard.updateMatch("home team", "away team", new MatchScore(1, 3));
             scoreboard.finishMatch("home team", "away team");
 
             assertThat(scoreboard.getSummary()).isEmpty();
+        }
+
+        @Test
+        void shouldReturnSummaryOfReplayedMatch() {
+            scoreboard.startMatch("home team", "away team");
+            scoreboard.finishMatch("home team", "away team");
+            scoreboard.startMatch("home team", "away team");
+
+            assertThat(scoreboard.getSummary())
+                    .singleElement()
+                    .extracting(MatchSummary::summary)
+                    .isEqualTo("home team 0 - away team 0");
         }
     }
 }

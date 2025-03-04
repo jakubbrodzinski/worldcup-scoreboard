@@ -13,6 +13,6 @@ class MatchSummaryTest {
 
         var matchSummary = MatchSummary.from(match);
 
-        assertThat(matchSummary.summary()).isEqualTo("Spain 3 - 6 England");
+        assertThat(matchSummary.summary()).isEqualTo("Spain 3 - England 6");
     }
 }
