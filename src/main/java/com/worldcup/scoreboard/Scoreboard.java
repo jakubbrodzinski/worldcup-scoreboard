@@ -48,7 +48,7 @@ public class Scoreboard {
         matchRepository.deleteByTeamNames(homeTeamName, awayTeamName);
     }
 
-    public List<MatchSummary> getSummary() {
+    public List<MatchSummary> getMatchesSummary() {
         return matchRepository.queryOrdered().stream()
                 .map(MatchSummary::from)
                 .toList();
@@ -83,12 +83,11 @@ public class Scoreboard {
             return matchesOrderedIndex;
         }
 
-        Match save(Match match) {
+        void save(Match match) {
             teamsWithLiveMatch.add(match.homeTeamName());
             teamsWithLiveMatch.add(match.awayTeamName());
             liveMatchesByKey.put(buildKey(match), match);
             rebuildOrderedIndex();
-            return match;
         }
 
         boolean existsByTeamName(String teamName) {

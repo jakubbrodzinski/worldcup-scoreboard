@@ -129,17 +129,17 @@ class ScoreboardTest {
     }
 
     @Nested
-    class GetSummary {
+    class GetMatchesSummary {
         @Test
         void shouldHandleEmptyScoreboard() {
-            assertThat(scoreboard.getSummary()).isEmpty();
+            assertThat(scoreboard.getMatchesSummary()).isEmpty();
         }
 
         @Test
         void shouldReturnSummaryOfSavedMatch() {
             scoreboard.startMatch("home team", "away team");
 
-            assertThat(scoreboard.getSummary())
+            assertThat(scoreboard.getMatchesSummary())
                     .singleElement()
                     .extracting(MatchSummary::summary)
                     .isEqualTo("home team 0 - away team 0");
@@ -150,7 +150,7 @@ class ScoreboardTest {
             scoreboard.startMatch("home team", "away team");
             scoreboard.updateMatch("home team", "away team", new MatchScore(1, 3));
 
-            assertThat(scoreboard.getSummary())
+            assertThat(scoreboard.getMatchesSummary())
                     .singleElement()
                     .extracting(MatchSummary::summary)
                     .isEqualTo("home team 1 - away team 3");
@@ -162,7 +162,7 @@ class ScoreboardTest {
             scoreboard.updateMatch("home team", "away team", new MatchScore(1, 3));
             scoreboard.finishMatch("home team", "away team");
 
-            assertThat(scoreboard.getSummary()).isEmpty();
+            assertThat(scoreboard.getMatchesSummary()).isEmpty();
         }
 
         @Test
@@ -171,7 +171,7 @@ class ScoreboardTest {
             scoreboard.finishMatch("home team", "away team");
             scoreboard.startMatch("home team", "away team");
 
-            assertThat(scoreboard.getSummary())
+            assertThat(scoreboard.getMatchesSummary())
                     .singleElement()
                     .extracting(MatchSummary::summary)
                     .isEqualTo("home team 0 - away team 0");
@@ -183,7 +183,7 @@ class ScoreboardTest {
             scoreboard.startMatch("team C", "team D");
             scoreboard.updateMatch("team C", "team D", new MatchScore(0, 1));
 
-            assertThat(scoreboard.getSummary())
+            assertThat(scoreboard.getMatchesSummary())
                     .extracting(MatchSummary::summary)
                     .containsExactly("team C 0 - team D 1", "team A 0 - team B 0");
         }
@@ -204,7 +204,7 @@ class ScoreboardTest {
             scoreboard.updateMatch("Uruguay", "Italy", new MatchScore(6, 6));
             scoreboard.updateMatch("Argentina", "Australia", new MatchScore(3, 1));
 
-            assertThat(scoreboard.getSummary())
+            assertThat(scoreboard.getMatchesSummary())
                     .extracting(MatchSummary::summary)
                     .containsExactly(
                             "Uruguay 6 - Italy 6",
