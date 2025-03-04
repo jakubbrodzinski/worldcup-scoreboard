@@ -4,6 +4,7 @@ import com.worldcup.scoreboard.exceptions.DomainValidationException;
 import com.worldcup.scoreboard.exceptions.MatchNotFoundException;
 import com.worldcup.scoreboard.exceptions.TeamPartOfLiveMatchException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -168,6 +169,43 @@ class ScoreboardTest {
                     .singleElement()
                     .extracting(MatchSummary::summary)
                     .isEqualTo("home team 0 - away team 0");
+        }
+
+        @Test
+        void shouldSortMatchesByTotalSumOfGoalsDesc() {
+            scoreboard.startMatch("team A", "team B");
+            scoreboard.startMatch("team C", "team D");
+            scoreboard.updateMatch("team C", "team D", new MatchScore(0, 1));
+
+            assertThat(scoreboard.getSummary())
+                    .extracting(MatchSummary::summary)
+                    .containsExactly("team C 0 - team D 1", "team A 0 - team B 0");
+        }
+
+        @Test
+        @DisplayName("Complex example from the exercise")
+        void shouldSortMatches() {
+            scoreboard.startMatch("Mexico", "Canada");
+            scoreboard.startMatch("Spain", "Brazil");
+            scoreboard.startMatch("Germany", "France");
+            scoreboard.startMatch("Uruguay", "Italy");
+            scoreboard.startMatch("Argentina", "Australia");
+
+            scoreboard.updateMatch("Mexico", "Canada", new MatchScore(0, 5));
+            scoreboard.updateMatch("Spain", "Brazil", new MatchScore(10, 2));
+            scoreboard.updateMatch("Germany", "France", new MatchScore(2, 2));
+            scoreboard.updateMatch("Uruguay", "Italy", new MatchScore(0, 6));
+            scoreboard.updateMatch("Uruguay", "Italy", new MatchScore(6, 6));
+            scoreboard.updateMatch("Argentina", "Australia", new MatchScore(3, 1));
+
+            assertThat(scoreboard.getSummary())
+                    .extracting(MatchSummary::summary)
+                    .containsExactly(
+                            "Uruguay 6 - Italy 6",
+                            "Spain 10 - Brazil 2",
+                            "Mexico 0 - Canada 5",
+                            "Argentina 3 - Australia 1",
+                            "Germany 2 - France 2");
         }
     }
 }
