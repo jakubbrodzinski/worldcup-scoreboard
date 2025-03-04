@@ -117,7 +117,9 @@ class ScoreboardTest {
             scoreboard.startMatch("home team", "away team");
 
             assertThat(scoreboard.getSummary())
-                    .hasSize(1);
+                    .singleElement()
+                    .extracting(MatchSummary::summary)
+                    .isEqualTo("home team 0 - 0 away team ");
         }
     }
 }
