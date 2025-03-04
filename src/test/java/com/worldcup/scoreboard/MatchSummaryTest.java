@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class MatchSummaryTest {
     @Test
     void shouldCreateMatchSummary() {
-        var match = new Match("Spain", "Englang", 3, 6, Instant.ofEpochSecond(1));
+        var match = new Match("Spain", "England", 3, 6, Instant.ofEpochSecond(1));
 
         var matchSummary = MatchSummary.from(match);
 

@@ -119,7 +119,7 @@ class ScoreboardTest {
             assertThat(scoreboard.getSummary())
                     .singleElement()
                     .extracting(MatchSummary::summary)
-                    .isEqualTo("home team 0 - 0 away team ");
+                    .isEqualTo("home team 0 - 0 away team");
         }
     }
 }
