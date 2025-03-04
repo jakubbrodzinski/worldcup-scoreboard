@@ -41,4 +41,8 @@ record Match(
             throw new DomainValidationException("Team score cannot be a negative number");
         }
     }
+
+    Match update(MatchScore matchScore) {
+        return new Match(homeTeamName, awayTeamName, matchScore.homeTeamScore(), matchScore.awayTeamScore(), startMatchTime);
+    }
 }
