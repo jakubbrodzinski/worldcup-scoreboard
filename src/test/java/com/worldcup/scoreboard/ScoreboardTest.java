@@ -139,5 +139,13 @@ class ScoreboardTest {
                     .extracting(MatchSummary::summary)
                     .isEqualTo("home team 1 - 3 away team");
         }
+
+        @Test
+        void shouldNotReturnFinishedMatch() {
+            scoreboard.startMatch("home team", "away team");
+            scoreboard.finishMatch("home team", "away team");
+
+            assertThat(scoreboard.getSummary()).isEmpty();
+        }
     }
 }
