@@ -73,7 +73,7 @@ class MatchTest {
         }
 
         @Test
-        void shouldUpdateTheScoreToLowerNumberOfGoals() {
+        void shouldUpdateTheScoreWhenLoweringNumberOfGoals() {
             var match = new Match("team A", "team B", 3, 3, Instant.now());
 
             var result = match.update(new MatchScore(1, 2));

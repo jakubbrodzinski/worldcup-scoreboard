@@ -11,6 +11,11 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 import static org.assertj.core.api.Assertions.*;
 
 class ScoreboardTest {
@@ -50,7 +55,7 @@ class ScoreboardTest {
         }
 
         @ParameterizedTest
-        @CsvSource(value = {"null, valid team name", "valid team name, null"}, nullValues = "null")
+        @NullTestCases
         void shouldThrowExceptionWhenTeamNameIsNull(String homeTeamName, String awayTeamName) {
             assertThatThrownBy(() -> scoreboard.startMatch(homeTeamName, awayTeamName))
                     .isInstanceOf(DomainValidationException.class)
@@ -81,9 +86,10 @@ class ScoreboardTest {
                     .hasMessageContainingAll("team A", "team B");
         }
 
-        @Test
-        void shouldThrowExceptionWhenTeamNameIsNull() {
-            assertThatThrownBy(() -> scoreboard.updateMatch("team A", null, new MatchScore(0, 0)))
+        @ParameterizedTest
+        @NullTestCases
+        void shouldThrowExceptionWhenTeamNameIsNull(String homeTeamName,String awayTeamName) {
+            assertThatThrownBy(() -> scoreboard.updateMatch(homeTeamName, awayTeamName, new MatchScore(0, 0)))
                     .isInstanceOf(DomainValidationException.class);
         }
 
@@ -105,7 +111,7 @@ class ScoreboardTest {
         }
 
         @ParameterizedTest
-        @CsvSource(value = {"null, valid team name", "valid team name, null"}, nullValues = "null")
+        @NullTestCases
         void shouldThrowExceptionWhenTeamNameIsNull(String homeTeamName, String awayTeamName) {
             assertThatThrownBy(() -> scoreboard.finishMatch(homeTeamName, awayTeamName))
                     .isInstanceOf(DomainValidationException.class)
@@ -207,5 +213,11 @@ class ScoreboardTest {
                             "Argentina 3 - Australia 1",
                             "Germany 2 - France 2");
         }
+    }
+
+    @Target(ElementType.METHOD)
+    @Retention(RetentionPolicy.RUNTIME)
+    @CsvSource(value = {"null, valid team name", "valid team name, null"}, nullValues = "null")
+    public @interface NullTestCases {
     }
 }

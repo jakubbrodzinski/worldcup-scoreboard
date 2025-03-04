@@ -24,6 +24,10 @@ record Match(
         validateScoresNotNegative(homeTeamScore, awayTeamScore);
     }
 
+    Match update(MatchScore matchScore) {
+        return new Match(homeTeamName, awayTeamName, matchScore.homeTeamScore(), matchScore.awayTeamScore(), startMatchTime);
+    }
+
     private void validateTeamName(String teamName) {
         if (teamName == null || teamName.isBlank()) {
             throw new DomainValidationException("Team's name cannot be null nor blank");
@@ -40,9 +44,5 @@ record Match(
         if (homeTeamScore < 0 || awayTeamScore < 0) {
             throw new DomainValidationException("Team score cannot be a negative number");
         }
-    }
-
-    Match update(MatchScore matchScore) {
-        return new Match(homeTeamName, awayTeamName, matchScore.homeTeamScore(), matchScore.awayTeamScore(), startMatchTime);
     }
 }

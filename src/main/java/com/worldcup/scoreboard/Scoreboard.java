@@ -49,7 +49,7 @@ public class Scoreboard {
     }
 
     public List<MatchSummary> getSummary() {
-        return matchRepository.query().stream()
+        return matchRepository.queryOrdered().stream()
                 .map(MatchSummary::from)
                 .toList();
     }
@@ -66,22 +66,21 @@ public class Scoreboard {
         }
     }
 
-    //TODO Consider extracting it as a separate class.
     private static class InMemoryMatchRepository {
         private static final String KEY_SEPARATOR = "#";
 
         private final Set<String> teamsWithLiveMatch = new HashSet<>();
         private final Map<String, Match> liveMatchesByKey = new HashMap<>();
-        private final Comparator<Match> matchesOrderingPolicy;
+        private List<Match> matchesOrderedIndex = emptyList();
 
-        private List<Match> orderedIndex = emptyList();
+        private final Comparator<Match> matchesOrderingPolicy;
 
         private InMemoryMatchRepository(Comparator<Match> matchesOrderingPolicy) {
             this.matchesOrderingPolicy = matchesOrderingPolicy;
         }
 
-        List<Match> query() {
-            return orderedIndex;
+        List<Match> queryOrdered() {
+            return matchesOrderedIndex;
         }
 
         Match save(Match match) {
@@ -108,7 +107,7 @@ public class Scoreboard {
         }
 
         private void rebuildOrderedIndex() {
-            this.orderedIndex = this.liveMatchesByKey.values().stream()
+            this.matchesOrderedIndex = this.liveMatchesByKey.values().stream()
                     .sorted(this.matchesOrderingPolicy)
                     .toList();
         }
