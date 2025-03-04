@@ -38,6 +38,7 @@ public class Scoreboard {
         Match save(Match match) {
             teamsWithLiveMatch.add(match.homeTeamName());
             teamsWithLiveMatch.add(match.awayTeamName());
+            liveMatchesByKey.put(buildKey(match), match);
             return match;
         }
 
@@ -51,6 +52,10 @@ public class Scoreboard {
 
         private String buildKey(String homeTeamName, String awayTeamName) {
             return homeTeamName + KEY_SEPARATOR + awayTeamName;
+        }
+
+        private String buildKey(Match match) {
+            return buildKey(match.homeTeamName(), match.awayTeamName());
         }
     }
 }
