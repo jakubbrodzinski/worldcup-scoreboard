@@ -26,7 +26,7 @@ record Match(
 
     private void validateTeamName(String teamName) {
         if (teamName == null || teamName.isBlank()) {
-            throw new DomainValidationException("Invalid team's name");
+            throw new DomainValidationException("Team's name cannot be null nor blank");
         }
     }
 
