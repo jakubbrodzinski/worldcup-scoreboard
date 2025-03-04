@@ -22,7 +22,10 @@ public class Scoreboard {
         validateNonNull(homeTeamName, awayTeamName);
 
         matchRepository.findByTeamNames(homeTeamName, awayTeamName)
-                .orElseThrow(() -> new MatchNotFoundException(homeTeamName, awayTeamName));
+                .map(match -> match.update(matchScore))
+                .ifPresentOrElse(matchRepository::save, () -> {
+                    throw new MatchNotFoundException(homeTeamName, awayTeamName);
+                });
     }
 
     public void finishMatch(String homeTeamName, String awayTeamName) {
