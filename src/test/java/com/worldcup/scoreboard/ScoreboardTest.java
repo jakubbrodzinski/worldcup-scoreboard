@@ -90,7 +90,19 @@ class ScoreboardTest {
 
     @Nested
     class FinishMatch {
+        @Test
+        void shouldNotThrowExceptionWhenFinishingNonExistingMatch() {
+            assertThatCode(() -> scoreboard.finishMatch("team A", "team B"))
+                    .doesNotThrowAnyException();
+        }
 
+        @ParameterizedTest
+        @CsvSource(value = {"null, valid team name", "valid team name, null"}, nullValues = "null")
+        void shouldThrowExceptionWhenTeamNameIsNull(String homeTeamName, String awayTeamName) {
+            assertThatThrownBy(() -> scoreboard.finishMatch(homeTeamName, awayTeamName))
+                    .isInstanceOf(DomainValidationException.class)
+                    .hasMessageContaining("cannot be null");
+        }
     }
 
     @Nested

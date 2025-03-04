@@ -28,6 +28,10 @@ public class Scoreboard {
                 .orElseThrow(() -> new MatchNotFoundException(homeTeamName, awayTeamName));
     }
 
+    public void finishMatch(String homeTeamName, String awayTeamName) {
+        validateNonNull(homeTeamName, awayTeamName);
+    }
+
     private void validateForLiveMatch(String teamName) {
         if (matchRepository.existsByTeamName(teamName)) {
             throw new TeamPartOfLiveMatchException(teamName);
@@ -41,10 +45,10 @@ public class Scoreboard {
     }
 
     //TODO Consider extracting it as a separate class.
-    private class InMemoryMatchRepository {
+    private static class InMemoryMatchRepository {
         private static final String KEY_SEPARATOR = "#";
-        private Set<String> teamsWithLiveMatch = new HashSet<>();
-        private HashMap<String, Match> liveMatchesByKey = new HashMap<>();
+        private final Set<String> teamsWithLiveMatch = new HashSet<>();
+        private final HashMap<String, Match> liveMatchesByKey = new HashMap<>();
 
         Match save(Match match) {
             teamsWithLiveMatch.add(match.homeTeamName());
