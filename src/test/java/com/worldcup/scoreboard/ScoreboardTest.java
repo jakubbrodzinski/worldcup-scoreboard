@@ -80,6 +80,12 @@ class ScoreboardTest {
                     .isInstanceOf(MatchNotFoundException.class)
                     .hasMessageContainingAll("team A", "team B");
         }
+
+        @Test
+        void shouldThrowExceptionWhenTeamNameIsNull() {
+            assertThatThrownBy(() -> scoreboard.updateMatch("team A", null, new MatchScore(0, 0)))
+                    .isInstanceOf(DomainValidationException.class);
+        }
     }
 
     @Nested

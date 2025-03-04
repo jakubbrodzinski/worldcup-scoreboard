@@ -1,5 +1,6 @@
 package com.worldcup.scoreboard;
 
+import com.worldcup.scoreboard.exceptions.DomainValidationException;
 import com.worldcup.scoreboard.exceptions.MatchNotFoundException;
 import com.worldcup.scoreboard.exceptions.TeamPartOfLiveMatchException;
 
@@ -13,12 +14,16 @@ public class Scoreboard {
     private final InMemoryMatchRepository matchRepository = new Scoreboard.InMemoryMatchRepository();
 
     public void startMatch(String homeTeamName, String awayTeamName) {
+        validateNonNull(homeTeamName, awayTeamName);
         validateForLiveMatch(homeTeamName);
         validateForLiveMatch(awayTeamName);
+
         matchRepository.save(new Match(homeTeamName, awayTeamName, Instant.now()));
     }
 
     public void updateMatch(String homeTeamName, String awayTeamName, MatchScore matchScore) {
+        validateNonNull(homeTeamName, awayTeamName);
+
         matchRepository.findByTeamNames(homeTeamName, awayTeamName)
                 .orElseThrow(() -> new MatchNotFoundException(homeTeamName, awayTeamName));
     }
@@ -26,6 +31,12 @@ public class Scoreboard {
     private void validateForLiveMatch(String teamName) {
         if (matchRepository.existsByTeamName(teamName)) {
             throw new TeamPartOfLiveMatchException(teamName);
+        }
+    }
+
+    private void validateNonNull(String homeTeamName, String awayTeamName) {
+        if (homeTeamName == null || awayTeamName == null) {
+            throw new DomainValidationException("Teams' name cannot be null");
         }
     }
 
