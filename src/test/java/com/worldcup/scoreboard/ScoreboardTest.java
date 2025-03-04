@@ -18,7 +18,7 @@ class ScoreboardTest {
 
     @BeforeEach
     void setUp() {
-        scoreboard = new Scoreboard();
+        scoreboard = Scoreboard.defaultInstance();
     }
 
     @Nested

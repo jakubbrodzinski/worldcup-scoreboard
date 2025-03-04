@@ -7,8 +7,23 @@ import com.worldcup.scoreboard.exceptions.TeamPartOfLiveMatchException;
 import java.time.Instant;
 import java.util.*;
 
+import static com.worldcup.scoreboard.MatchesOrderingPolicies.highestScoringMatchesFirst;
+import static com.worldcup.scoreboard.MatchesOrderingPolicies.recentlyStartedMatchesFirst;
+import static java.util.Collections.emptyList;
+
 public class Scoreboard {
-    private final InMemoryMatchRepository matchRepository = new Scoreboard.InMemoryMatchRepository();
+    private final InMemoryMatchRepository matchRepository;
+
+    public static Scoreboard defaultInstance() {
+        return new Scoreboard(
+                new Scoreboard.InMemoryMatchRepository(
+                        highestScoringMatchesFirst()
+                                .thenComparing(recentlyStartedMatchesFirst())));
+    }
+
+    private Scoreboard(InMemoryMatchRepository repository) {
+        this.matchRepository = repository;
+    }
 
     public void startMatch(String homeTeamName, String awayTeamName) {
         validateNonNull(homeTeamName, awayTeamName);
@@ -54,17 +69,26 @@ public class Scoreboard {
     //TODO Consider extracting it as a separate class.
     private static class InMemoryMatchRepository {
         private static final String KEY_SEPARATOR = "#";
+
         private final Set<String> teamsWithLiveMatch = new HashSet<>();
-        private final HashMap<String, Match> liveMatchesByKey = new HashMap<>();
+        private final Map<String, Match> liveMatchesByKey = new HashMap<>();
+        private final Comparator<Match> matchesOrderingPolicy;
+
+        private List<Match> orderedIndex = emptyList();
+
+        private InMemoryMatchRepository(Comparator<Match> matchesOrderingPolicy) {
+            this.matchesOrderingPolicy = matchesOrderingPolicy;
+        }
 
         List<Match> query() {
-            return new ArrayList<>(liveMatchesByKey.values());
+            return orderedIndex;
         }
 
         Match save(Match match) {
             teamsWithLiveMatch.add(match.homeTeamName());
             teamsWithLiveMatch.add(match.awayTeamName());
             liveMatchesByKey.put(buildKey(match), match);
+            rebuildOrderedIndex();
             return match;
         }
 
@@ -80,6 +104,13 @@ public class Scoreboard {
             teamsWithLiveMatch.remove(homeTeamName);
             teamsWithLiveMatch.remove(awayTeamName);
             liveMatchesByKey.remove(buildKey(homeTeamName, awayTeamName));
+            rebuildOrderedIndex();
+        }
+
+        private void rebuildOrderedIndex() {
+            this.orderedIndex = this.liveMatchesByKey.values().stream()
+                    .sorted(this.matchesOrderingPolicy)
+                    .toList();
         }
 
         private String buildKey(String homeTeamName, String awayTeamName) {
