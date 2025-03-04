@@ -85,7 +85,14 @@ class ScoreboardTest {
             assertThatThrownBy(() -> scoreboard.updateMatch("team A", null, new MatchScore(0, 0)))
                     .isInstanceOf(DomainValidationException.class);
         }
-        //TODO add test case for different order
+
+        @Test
+        void shouldThrowExceptionWhenTeamNamesAreSwapped() {
+            scoreboard.startMatch("team A", "team B");
+
+            assertThatCode(() -> scoreboard.updateMatch("team B", "team A", new MatchScore(5, 3)))
+                    .isInstanceOf(MatchNotFoundException.class);
+        }
     }
 
     @Nested
