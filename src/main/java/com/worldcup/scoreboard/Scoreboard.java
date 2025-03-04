@@ -29,8 +29,10 @@ public class Scoreboard {
         validateNonNull(homeTeamName, awayTeamName);
     }
 
-    public List<MatchSummary> getSummary(){
-        return Collections.emptyList();
+    public List<MatchSummary> getSummary() {
+        return matchRepository.query().stream()
+                .map(MatchSummary::from)
+                .toList();
     }
 
     private void validateForLiveMatch(String teamName) {
@@ -50,6 +52,10 @@ public class Scoreboard {
         private static final String KEY_SEPARATOR = "#";
         private final Set<String> teamsWithLiveMatch = new HashSet<>();
         private final HashMap<String, Match> liveMatchesByKey = new HashMap<>();
+
+        List<Match> query() {
+            return new ArrayList<>(liveMatchesByKey.values());
+        }
 
         Match save(Match match) {
             teamsWithLiveMatch.add(match.homeTeamName());

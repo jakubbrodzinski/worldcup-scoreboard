@@ -85,6 +85,7 @@ class ScoreboardTest {
             assertThatThrownBy(() -> scoreboard.updateMatch("team A", null, new MatchScore(0, 0)))
                     .isInstanceOf(DomainValidationException.class);
         }
+        //TODO add test case for different order
     }
 
     @Nested
@@ -109,6 +110,14 @@ class ScoreboardTest {
         @Test
         void shouldHandleEmptyScoreboard() {
             assertThat(scoreboard.getSummary()).isEmpty();
+        }
+
+        @Test
+        void shouldReturnSavedMatch() {
+            scoreboard.startMatch("home team", "away team");
+
+            assertThat(scoreboard.getSummary())
+                    .hasSize(1);
         }
     }
 }
