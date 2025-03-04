@@ -1,10 +1,11 @@
 # Live Football World Cup Score Board
 ## Assumptions / Limitations
-- Persistence is out of exercise scope. Is it?
 - The moment of invoking `startMatch(...)` is treated as a moment of starting the match. The time is an internal impl. detail and is not exposed anywhere.
-- 
 - It's a scoreboard for the World Cup - each team cannot participate in more than one match.
+- Finishing non-existing match does not result in a failure.
 - Should I even expose the Match class/record?
+- Persistence is out of exercise scope. Is it?
+- To keep the test as a totally blac
 ## L
 
 Notes:
