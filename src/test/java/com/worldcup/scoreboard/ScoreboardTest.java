@@ -1,6 +1,7 @@
 package com.worldcup.scoreboard;
 
 import com.worldcup.scoreboard.exceptions.DomainValidationException;
+import com.worldcup.scoreboard.exceptions.MatchNotFoundException;
 import com.worldcup.scoreboard.exceptions.TeamPartOfLiveMatchException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -65,6 +66,13 @@ class ScoreboardTest {
 
             assertThatCode(() -> scoreboard.updateMatch("team A", "team B", new MatchScore(5, 3)))
                     .doesNotThrowAnyException();
+        }
+
+        @Test
+        void shouldThrowExceptionWhenTeamAreNotPartOfAnyMatch() {
+            assertThatThrownBy(() -> scoreboard.updateMatch("team A", "team B", new MatchScore(5, 3)))
+                    .isInstanceOf(MatchNotFoundException.class)
+                    .hasMessageContainingAll("team A", "team B");
         }
     }
 
